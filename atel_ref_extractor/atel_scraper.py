@@ -2,13 +2,23 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import sys
+import argparse
+import pprint
+
+parser = argparse.ArgumentParser(description = 'This script is for extracting ATels and obtaining all information related to it (publication date, authors, subjects and references to other reports)')
+parser.add_argument('--atel_id', required = True, type = str)
+args = parser.parse_args()
+atel_id = args.atel_id
 
 class AtelScraper:
 
     def __init__(self, atel_id):
 
-        self.url = 'https://www.astronomerstelegram.org/'
-        
+        self.atel_url = 'https://www.astronomerstelegram.org/'
+        self.old_gcn_url = 'http://gcn.gsfc.nasa.gov/gcn/gcn3/'
+        self.new_gcn_url = 'https://gcn.nasa.gov/circulars/'
+
+
         self.headers = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
                 }
@@ -27,7 +37,7 @@ class AtelScraper:
     def request_html_code(self):
 
         try:
-            page = requests.get(url = f'{self.url}/?read={self.atel_id}', headers = self.headers)
+            page = requests.get(url = f'{self.atel_url}/?read={self.atel_id}', headers = self.headers)
             soup = BeautifulSoup(page.content, 'html.parser')
             time.sleep(self.waiting_time)
 
@@ -46,10 +56,18 @@ class AtelScraper:
 
     def extract_related_references(self, html_code):
 
-        related_section = html_code.find_all('div', {'id': 'related'})[0]
-        related_references = related_section.find_all('a', href = lambda href: href and href.startswith("https://www.astronomerstelegram.org/?read=") and not href == 'https://www.astronomerstelegram.org/?read=')
+        related_section = html_code.find_all('div', {'id': 'related'})
         
-        return list(related_references)
+        if related_section != []: # if there is at least one related references
+            links = related_section[0].find_all('a', href = lambda href: href and href.startswith("https://www.astronomerstelegram.org/?read=") and not href == 'https://www.astronomerstelegram.org/?read=')
+            related_references = []
+            for link in links:
+                related_references.append(link['href'])
+        
+            return related_references
+        
+        else: # if there is no related references
+            return []
     
     def extract_references_from_fulltext(self, html_code):
 
@@ -59,9 +77,28 @@ class AtelScraper:
         
         fulltext_references = []
         for e in fulltext:
+            
+            # if there is a reference to an ATel
             if e.find_all('a', href=lambda href: href and href.startswith("https://www.astronomerstelegram.org/?read=") and not href == 'https://www.astronomerstelegram.org/?read='):
-                fulltext_references.append(e.find_all('a', href=lambda href: href and href.startswith("https://www.astronomerstelegram.org/?read=") and not href == 'https://www.astronomerstelegram.org/?read=')[0]['href'])
+                atel_links = e.find_all('a', href=lambda href: href and href.startswith("https://www.astronomerstelegram.org/?read=") and not href == 'https://www.astronomerstelegram.org/?read=')
+                for atel_link in atel_links:
+                    if atel_link['href'] not in fulltext_references:
+                        fulltext_references.append(atel_link['href'])
+            
+            # if there is a reference to an ET (from CBET)
+            if e.find_all('a', href=lambda href: href and href.startswith("http://www.cbat.eps.harvard.edu/iau/cbet/")):
+                cbet_links = e.find_all('a', href=lambda href: href and href.startswith("http://www.cbat.eps.harvard.edu/iau/cbet/"))
+                for cbet_link in cbet_links:
+                    if cbet_link['href'] not in fulltext_references:
+                        fulltext_references.append(cbet_link['href'])
 
+            #if there is a reference to a GCN circular
+            if e.find_all('a', href=lambda href: href and href.startswith("http://gcn.gsfc.nasa.gov/gcn/gcn3/")):
+                gcn_links = e.find_all('a', href=lambda href: href and href.startswith("http://gcn.gsfc.nasa.gov/gcn/gcn3/"))
+                for gcn_link in gcn_links:
+                    if gcn_link['href'] not in fulltext_references:
+                        fulltext_references.append(gcn_link['href'])
+        
         return fulltext_references
      
     def extract_metadata_from_atel(self):
@@ -70,20 +107,23 @@ class AtelScraper:
 
         metadata = {}
         
-        metadata['atelNumber'] = self.atel_id
-        metadata['fulltext'] = self.extract_fulltext(soup)
-        metadata['related_references'] = self.extract_related_references(soup)
-        metadata['fulltext_references'] = self.extract_references_from_fulltext(soup)
+        metadata['atel_id'] = self.atel_id
         metadata['title'] = soup.find('title').text.strip()
-        metadata['publicationDate'] = soup.find('div', {"id": 'time'}).text.strip()
+        metadata['publication_date'] = soup.find('div', {"id": 'time'}).text.strip()
         metadata['subjects'] = soup.find('p', {"class": 'subjects'}).text.split('Subjects:')[1].strip()
         author_tags = soup.find_all('a', href=lambda href: href and "mailto" in href)
         authors = [tag.text for tag in author_tags]
         metadata['authors'] = authors
+        metadata['fulltext'] = self.extract_fulltext(soup)
+        metadata['related_references'] = self.extract_related_references(soup)
+        metadata['fulltext_references'] = self.extract_references_from_fulltext(soup)
 
         return metadata
     
+atelScraper = AtelScraper(atel_id = atel_id)
+metadata = atelScraper.extract_metadata_from_atel()
 
+pprint.PrettyPrinter(indent = 4).pprint(metadata)
 
 
 
