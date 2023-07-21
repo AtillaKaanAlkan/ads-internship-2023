@@ -9,5 +9,6 @@ The Astronomer's Telegram publication system (ATel) is a communication channel e
 #### Principle of the Script
 
 #### Example of a Use-case
+Assume you want to scrap the latest ATel from the website
 
 
