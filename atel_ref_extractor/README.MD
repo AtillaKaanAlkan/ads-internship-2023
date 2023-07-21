@@ -9,7 +9,7 @@ The Astronomer's Telegram publication system (ATel) is a communication channel e
 #### Principle of the Script
 This script enables to extract a given ATel and all information (metadata) related to it: title, subject, publication date, authors, fulltext, and all references to other observations reports.
 
-#### Example of a Use-case
+#### Example of a Use-case: Extracting references and metadata from ATel No. 16116
 Assume you want to scrap the latest ATel (let's say ATel No. 16116) from the website. In order to extract its metadata, run the following command: `python atel_scraper.py --atel_id 16116`. Then, the script will return a dictionary with the following entries:
 
 ```
