@@ -6,6 +6,8 @@ The Astronomer's Telegram publication system (ATel) is a communication channel e
 
 ### Extracting References from ATels
 
-##### Principle of the script
+#### Principle of the Script
+
+#### Example of a Use-case
 
 
