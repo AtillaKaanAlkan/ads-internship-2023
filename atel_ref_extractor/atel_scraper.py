@@ -18,6 +18,10 @@ class AtelScraper:
         self.old_gcn_url = 'http://gcn.gsfc.nasa.gov/gcn/gcn3/'
         self.new_gcn_url = 'https://gcn.nasa.gov/circulars/'
 
+        self.links_of_interest = ['https://www.astronomerstelegram.org/?read=',  ## link to an ATel telegram
+                                  'http://www.cbat.eps.harvard.edu/iau/cbet/',   ## link to an ET telegram (from CBET)
+                                  'http://gcn.gsfc.nasa.gov/gcn/gcn3/']          ## link to a GCN Circular
+
 
         self.headers = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
@@ -77,27 +81,14 @@ class AtelScraper:
         
         fulltext_references = []
         for e in fulltext:
-            
-            # if there is a reference to an ATel
-            if e.find_all('a', href=lambda href: href and href.startswith("https://www.astronomerstelegram.org/?read=") and not href == 'https://www.astronomerstelegram.org/?read='):
-                atel_links = e.find_all('a', href=lambda href: href and href.startswith("https://www.astronomerstelegram.org/?read=") and not href == 'https://www.astronomerstelegram.org/?read=')
-                for atel_link in atel_links:
-                    if atel_link['href'] not in fulltext_references:
-                        fulltext_references.append(atel_link['href'])
-            
-            # if there is a reference to an ET (from CBET)
-            if e.find_all('a', href=lambda href: href and href.startswith("http://www.cbat.eps.harvard.edu/iau/cbet/")):
-                cbet_links = e.find_all('a', href=lambda href: href and href.startswith("http://www.cbat.eps.harvard.edu/iau/cbet/"))
-                for cbet_link in cbet_links:
-                    if cbet_link['href'] not in fulltext_references:
-                        fulltext_references.append(cbet_link['href'])
 
-            #if there is a reference to a GCN circular
-            if e.find_all('a', href=lambda href: href and href.startswith("http://gcn.gsfc.nasa.gov/gcn/gcn3/")):
-                gcn_links = e.find_all('a', href=lambda href: href and href.startswith("http://gcn.gsfc.nasa.gov/gcn/gcn3/"))
-                for gcn_link in gcn_links:
-                    if gcn_link['href'] not in fulltext_references:
-                        fulltext_references.append(gcn_link['href'])
+            for links_of_interest in self.links_of_interest:
+
+                if e.find_all('a', href=lambda href: href and href.startswith(links_of_interest) and not href == links_of_interest):
+                    found_links = e.find_all('a', href=lambda href: href and href.startswith(links_of_interest) and not href == links_of_interest)
+                    for link in found_links:
+                        if link['href'] not in fulltext_references:
+                            fulltext_references.append(link['href'])
         
         return fulltext_references
      
@@ -115,8 +106,8 @@ class AtelScraper:
         authors = [tag.text for tag in author_tags]
         metadata['authors'] = authors
         metadata['fulltext'] = self.extract_fulltext(soup)
-        metadata['related_references'] = self.extract_related_references(soup)
-        metadata['fulltext_references'] = self.extract_references_from_fulltext(soup)
+        metadata['related_references_links'] = self.extract_related_references(soup)
+        metadata['fulltext_references_links'] = self.extract_references_from_fulltext(soup)
 
         return metadata
     
