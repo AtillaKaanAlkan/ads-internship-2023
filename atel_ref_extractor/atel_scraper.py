@@ -4,11 +4,14 @@ import time
 import sys
 import argparse
 import pprint
+import re
 
 parser = argparse.ArgumentParser(description = 'This script is for extracting ATels and obtaining all information related to it (publication date, authors, subjects and references to other reports)')
 parser.add_argument('--atel_id', required = True, type = str)
 args = parser.parse_args()
 atel_id = args.atel_id
+
+USE_REGULAX_EXPRESSION = True # choose to use (or not) regular expressions to find references 
 
 class AtelScraper:
 
@@ -93,7 +96,49 @@ class AtelScraper:
                                 fulltext_references.append(link['href'])
         
         return fulltext_references
-     
+
+    def extract_references_with_regular_expressions(self, text):
+
+        regex_patterns = [
+            
+            # for GCN circulars
+            r'GCN\s\d+',
+            r'GCN\s#\d+',
+            r'GCN Circ\s#\d+',
+            r'GCN Circ.\s#\d+',
+            
+            # for ATels
+            r'ATel\s#\d+',
+            r'ATel#\d+',
+            r'Atel#\d+',
+            r'Atel\s#\d+',
+            r'ATEL\s#\d+',
+            r'ATEL#\d+',
+            r'ATels\s#\d+',
+            r"ATels\s#(\d+(?:,\s#\d+)*)",
+            r"ATel\s#(\d+(?:,\s#\d+)*)",
+            r"ATel\s#(\d+(?:;\s#\d+)*)",
+
+            # for CBAT (frequently used?)
+            r'CBET\s\d+'
+            
+        ]
+
+        identified_expressions = []
+
+        for pattern in regex_patterns:
+            
+            matches = re.finditer(pattern, text)
+            
+            for match in matches:
+                
+                expression = match.group()
+                span = match.span()
+                if (expression, span) not in identified_expressions:
+                    identified_expressions.append((expression, span))
+
+        return identified_expressions
+
     def extract_metadata_from_atel(self):
 
         soup = self.request_html_code()
@@ -111,7 +156,13 @@ class AtelScraper:
         metadata['related_references_links'] = self.extract_related_references(soup)
         metadata['fulltext_references_links'] = self.extract_references_from_fulltext(soup)
 
+        if USE_REGULAX_EXPRESSION:
+            metadata['fulltext_references_regexp'] = self.extract_references_with_regular_expressions(metadata['fulltext'])
+
         return metadata
+    
+
+
     
 atelScraper = AtelScraper(atel_id = atel_id)
 metadata = atelScraper.extract_metadata_from_atel()
