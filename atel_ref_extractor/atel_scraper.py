@@ -80,15 +80,17 @@ class AtelScraper:
         fulltext = telegram_div.find_all('p')[idx + 1:]
         
         fulltext_references = []
+        
         for e in fulltext:
-
             for links_of_interest in self.links_of_interest:
-
                 if e.find_all('a', href=lambda href: href and href.startswith(links_of_interest) and not href == links_of_interest):
                     found_links = e.find_all('a', href=lambda href: href and href.startswith(links_of_interest) and not href == links_of_interest)
                     for link in found_links:
                         if link['href'] not in fulltext_references:
-                            fulltext_references.append(link['href'])
+                            if links_of_interest == self.old_gcn_url:
+                                fulltext_references.append(self.new_gcn_url + link['href'].split(self.old_gcn_url)[1].split('.gcn3')[0])
+                            else:
+                                fulltext_references.append(link['href'])
         
         return fulltext_references
      
