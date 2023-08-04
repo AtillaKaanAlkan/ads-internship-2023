@@ -2,11 +2,12 @@ import json
 import glob
 import gzip
 import argparse
+from utils import *
 
 """ 
 
 This script is useful if you want to use Fast-Coref for coreference resolution.
-This script converts your corpus (in BRAT annotations format (.ann files)) into JSONLINES format for Fast-Coref.
+This script converts your corpus (from BRAT annotations format (.ann files)) into JSONLINES format for Fast-Coref.
 
 """
 
@@ -15,39 +16,6 @@ parser.add_argument('--corpus_dir', required = True, type = str)
 args = parser.parse_args()
 path_to_folder = args.corpus_dir
 
-
-def dicts_to_jsonl(data_list: list, filename: str, compress: bool = True) -> None:
-    """
-    Method saves list of dicts into jsonlines file.
-
-    :param data: (list) list of dicts to be stored,
-    :param filename: (str) path to the output file. If suffix .jsonlines is not given then methods appends
-        .jsonlines suffix into the file.
-    :param compress: (bool) should file be compressed into a gzip archive?
-    """
-
-    sjsonl = '.jsonlines'
-    sgz = '.gz'
-
-    # Check filename
-
-    if not filename.endswith(sjsonl):
-        filename = filename + sjsonl
-
-    # Save data
-    
-    if compress:
-        filename = filename + sgz
-        with gzip.open(filename, 'w') as compressed:
-            for ddict in data_list:
-                jout = json.dumps(ddict) + '\n'
-                jout = jout.encode('utf-8')
-                compressed.write(jout)
-    else:
-        with open(filename, 'w') as out:
-            for ddict in data_list:
-                jout = json.dumps(ddict) + '\n'
-                out.write(jout)
 
 
 def standoff2jsonlines(path_to_folder, output_filename):
