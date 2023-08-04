@@ -5,27 +5,6 @@ import requests
 import json
 from helper import *
 
-parser = argparse.ArgumentParser(description = 'This script is for CelestialObject-type entity linking.')
-
-# mandatory argument, to fix the usage mode of the implemented class
-parser.add_argument('--pipeline', required = True, type = str)
-
-# input arguments that will be used according the selected usage mode
-parser.add_argument('--source_name', required = False, type = str)
-parser.add_argument('--knowledge_base', required = False, type = str, default = 'SIMBAD')
-parser.add_argument('--path_to_text', required = False, type = float, default = None)
-parser.add_argument('--tokens', required = False, type = list, default = [])
-parser.add_argument('--ner_tags', required = False, type = list, default = [])
-
-args = parser.parse_args()
-pipeline = args.pipeline
-astrophysical_source_name = parse_input_source_name(args.source_name)
-knowledge_base = args.knowledge_base
-path_to_text = args.path_to_text
-tokens = args.tokens
-ner_tags = args.ner_tags
-
-
 # path to the file where your ADS API token is stored
 with open('ads_token_api', 'r') as file:
     ads_token = file.read().strip()
@@ -76,15 +55,22 @@ class CelestialObjectEntityLinking():
         
     def get_source_identifier_from_KB(self):
 
-        payload = {"source": self.KB, "objects": self.source_name}
+        if self.source_name == []:
+            # if there is no Celestial Object in the document 
+            print('No CelestialObject-type entity in the given list')
+            return None
+        
+        else:
 
-        results = requests.post("https://api.adsabs.harvard.edu/v1/objects", \
-                                headers = {"accept": "application/json", 
-                                           "Authorization": "Bearer " + ads_token, 
-                                           "content-type": "application/json"}, \
-                                data = json.dumps(payload))
+            payload = {"source": self.KB, "objects": self.source_name}
 
-        return results.json()
+            results = requests.post("https://api.adsabs.harvard.edu/v1/objects", \
+                                    headers = {"accept": "application/json", 
+                                            "Authorization": "Bearer " + ads_token, 
+                                            "content-type": "application/json"}, \
+                                    data = json.dumps(payload))
+
+            return results.json()
     
     def normalize_text(self):
         # Should we implement a method to normalize the text?
@@ -96,9 +82,30 @@ def main():
 
     EL = CelestialObjectEntityLinking(pipeline, astrophysical_source_name, knowledge_base, path_to_text, tokens, ner_tags)
     results = EL.get_source_identifier_from_KB()
+    print(results)
     return results
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description = 'This script is for CelestialObject-type entity linking.')
+
+    # mandatory argument, to fix the usage mode of the implemented class
+    parser.add_argument('--pipeline', required = True, type = str)
+
+    # input arguments that will be used according the selected usage mode
+    parser.add_argument('--source_name', required = False, type = str)
+    parser.add_argument('--knowledge_base', required = False, type = str, default = 'SIMBAD')
+    parser.add_argument('--path_to_text', required = False, type = float, default = None)
+    parser.add_argument('--tokens', required = False, type = list, default = [])
+    parser.add_argument('--ner_tags', required = False, type = list, default = [])
+
+    args = parser.parse_args()
+    pipeline = args.pipeline
+    astrophysical_source_name = parse_input_source_name(args.source_name)
+    knowledge_base = args.knowledge_base
+    path_to_text = args.path_to_text
+    tokens = args.tokens
+    ner_tags = args.ner_tags
 
     results = main()
 
