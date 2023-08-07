@@ -16,7 +16,10 @@ The operating principle of our entity linking system for celestial object names 
 
 #### In command line
 
-#### In a Python script
+If you want to use our Entity Linking system in command line, run: 
+python celestial_object_entity_linking.py --source_name LIST_OF_ASTROPHYSICAL_OBJECT_NAMES --knowledge_base NAME_OF_THE_KB_TO_QUERY . For instance, if you want to obtain the unique identifier in SIMBAD the Andromeda F, you can 
+
+#### In a Python script 
 
 
 
