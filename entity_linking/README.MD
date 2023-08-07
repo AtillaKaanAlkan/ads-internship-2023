@@ -20,8 +20,21 @@ If you want to use our Entity Linking system in command line, run:
 `python celestial_object_entity_linking.py --source_name LIST_OF_ASTROPHYSICAL_OBJECT_NAMES --knowledge_base NAME_OF_THE_KB_TO_QUERY` . For instance, if you want to obtain the unique identifier in SIMBAD the Andromeda Galaxy (M31), and the most energetic Gama-Ray Burst GRB221009A detected so far, you can run:
 `python celestial_object_entity_linking.py --source_name [M31,GRB221009A] --knowledge_base SIMBAD`
 
-#### In a Python script 
+#### In a Python script
 
+```
+import celestial_object_entity_linking
+from celestial_object_entity_linking import CelestialObjectEntityLinking
+
+source_name = ['M31', 'GRB221009A']
+
+EL = CelestialObjectEntityLinking(source_name = source_name,
+                                  KB = 'SIMBAD', # you can also use 'NED'
+                                  )
+results = EL.get_source_identifier_from_KB()
+print(results)
+
+```
 #### Output
 
 Either in command line or in a Python script, the output will be a dictionary with the following entries:
