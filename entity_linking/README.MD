@@ -2,7 +2,7 @@
 
 Entity linking, also known as named entity disambiguation, is a natural language processing (NLP) task that involves connecting mentions of named entities in text to their corresponding real-world entities or references in a knowledge base. The goal of entity linking is to resolve the ambiguity present in named entities, as many entities may share the same name but represent distinct individuals, locations, organizations, or other entities. By accurately linking mentions to their correct entities, entity linking enhances the understanding of text, improves information retrieval, and enables more effective knowledge integration across various data sources and domains.
 
-# Celestial Object Names Entity Linking using Knowledge Bases
+## Celestial Object Names Entity Linking using Knowledge Bases
 
 In our study, we are interested on linking celestial objects names, such as stars, planets, and galaxies. These objects are observed and studied by various astronomical missions and researchers worldwide, leading to diverse naming conventions and cataloging systems. Thus, entity linking on celestial object names is crucial due to the multitude of different designations used to refer to the same cosmic entities. Without entity linking, confusion and misinterpretation can arise when trying to connect information from different sources or studies.
 
