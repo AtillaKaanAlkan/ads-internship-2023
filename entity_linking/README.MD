@@ -10,7 +10,7 @@ Let us consider the Andromeda Galaxy as an example. At least [39 designations](h
 
 ## How our Celestial Object Names Entity Linking System works?
 
-The operating principle of our entity linking system for celestial object names does not use statistical learning methods but is based solely on the query of several astronomical catalogues. 
+The operating principle of our entity linking system for celestial object names does not use statistical learning methods but is based solely on the query of several astronomical catalogues. For the moment, our current implementation supports only [SIMBAD](http://simbad.u-strasbg.fr/simbad/sim-basicIdent=m33&submit=SIMBAD+search) and [NED](https://ned.ipac.caltech.edu/) catalogues.
 
 ### Example
 
@@ -25,6 +25,12 @@ If you want to use our Entity Linking system in command line, run:
 #### Output
 
 Either in command line or in a Python script, the output will be a dictionary with the following entries:
+
+```
+{'M31': {'canonical': 'M  31', 'id': '1575544'},
+'GRB221009A': {'canonical': 'GRB 221009A', 'id': '19066842'}}
+```
+where `canonical` is the standard name of the celestial object, and `id`, its identifier in the catalogue.
 
 #### In Addition
 
