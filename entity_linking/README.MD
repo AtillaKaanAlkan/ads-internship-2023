@@ -46,7 +46,7 @@ where `canonical` is the standard name of the celestial object, and `id`, its id
 
 #### In Addition
 
-Furthermore, in Python, if you want to get all the designations of an astrophysical object, you can use the method `get_all_simbad_designations()` as shown below, and get the list of all existing names for a given object.
+Furthermore, in Python, if you want to get all the SIMBAD designations of an astrophysical object, you can use the method `get_all_simbad_designations()` as shown below, and get the list of all existing names for a given object.
 
 ```
 import celestial_object_entity_linking
@@ -54,9 +54,7 @@ from celestial_object_entity_linking import CelestialObjectEntityLinking
 
 source_name = ['GRB221009A']
 
-EL = CelestialObjectEntityLinking(source_name = source_name[0],
-                                  KB = 'SIMBAD', # you can also use 'NED'
-                                  )
+EL = CelestialObjectEntityLinking(source_name = source_name[0], KB = 'SIMBAD')
 results = EL.get_all_simbad_designations(source_name[0])
 print(results)
 
