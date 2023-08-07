@@ -8,7 +8,7 @@ def extract_only_celestial_object_from_ner_module_output(tokens, tags):
     sources_names = []
 
     for cob in Cob_only:
-        sources_names.append(" ".join(w for w in tokens[cob[1]: cob[-1]]))
+        sources_names.append(" ".join(w for w in tokens[cob[1]: cob[-1] + 1]))
     
     return Cob_only, sources_names
 
