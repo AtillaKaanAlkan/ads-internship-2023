@@ -10,3 +10,7 @@ We introduce five distinct relations that establish a systematic understanding o
 - `host_galaxy_of`: Connection between the astrophysical source and the galaxy in which it resides;
 - `wavelength_of`: Wavelength associated with the emitted radiation from the source;
 - `redshift_of`: The flux of a source, a measure of the energy passing through a unit area.
+
+## Training a Relation Extraction System
+
+### Data Format
