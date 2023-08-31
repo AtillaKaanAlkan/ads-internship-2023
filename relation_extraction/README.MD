@@ -5,7 +5,8 @@ Relation Extraction (RE) is a specific case of Information Extraction (IE) with 
 - `location_of`: Coordinates of an astrophysical object within the celestial sphere;
 - `host_galaxy_of`: Connection between the astrophysical source and the galaxy in which it resides;
 - `wavelength_of`: Wavelength associated with the emitted radiation from the source;
-- `redshift_of`: The flux of a source, a measure of the energy passing through a unit area.
+- `redshift_of`: Displacement value of a hosting galaxy;
+- `flux_of`: The flux of a source, a measure of the energy passing through a unit area.
 
 ## Training a Relation Extraction System
 
