@@ -7,3 +7,7 @@ under the supervision of Felix Grezes (felix.grezes [at] cfa.harvard.edu).
 2. Coreference Resolution : `\coref_resolution`
 3. Entity Linking: `\entity_linking`
 4. Relation Extraction: `\relation_extraction`
+
+5. ## Talk
+
+[Link](https://www.youtube.com/watch?v=9J81JpEaYZg) to watch the presentation.
