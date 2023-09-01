@@ -10,4 +10,4 @@ under the supervision of Felix Grezes (felix.grezes [at] cfa.harvard.edu).
 
 ## Talk
 
-[Link](https://www.youtube.com/watch?v=9J81JpEaYZg) to watch the presentation.
+Youtube [Link](https://www.youtube.com/watch?v=9J81JpEaYZg) to watch the presentation.
