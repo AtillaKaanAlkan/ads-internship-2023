@@ -15,10 +15,10 @@ The GCN platform is dedicated mainly to the gamma-ray bursts astrophysicists com
 This script enables to extract a given ATel or GCN circular and all information (metadata) related to it: title, subject, publication date, authors, fulltext, and all references to other observations reports.
 
 #### Example of a Use-case: Extracting references and metadata from ATel No. 16116
-Assume you want to scrap the latest ATel (let's say ATel No. 16116) from the website. In order to extract its metadata, run the following command: `python atel_scraper.py --report_type atel --report_id 16116`. Then, the script will return a dictionary with the following entries:
+Assume you want to scrap the latest ATel (let's say ATel No. 16116) from the website. In order to extract its metadata, run the following command: `python report_scraper.py --report_type atel --report_id 16116`. Then, the script will return a dictionary with the following entries:
 
 ```
-{'atel_id': 16116,
+{'report_id': 16116,
 
  'authors': ['Andrew Hughes (U. Alberta), Thomas Russell (INAF-IASF Palermo), Rob Fender (Oxford),
               Patrick Woudt (U. Cape Town), James Miller-Jones (Curtin), on behalf of the 
