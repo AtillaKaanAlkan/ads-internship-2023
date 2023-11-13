@@ -9,13 +9,13 @@ The Astronomer's Telegram publication system (ATel) is a communication channel e
 The GCN platform is dedicated mainly to the gamma-ray bursts astrophysicists community, where observers report their observations and analysis of GRBs in the form of "GCN Circulars".
 
 
-### Extracting References from ATels
+### Extracting Metadata (including References) from ATels and GCN circulars
 
 #### Principle of the Script
-This script enables to extract a given ATel and all information (metadata) related to it: title, subject, publication date, authors, fulltext, and all references to other observations reports.
+This script enables to extract a given ATel or GCN circular and all information (metadata) related to it: title, subject, publication date, authors, fulltext, and all references to other observations reports.
 
 #### Example of a Use-case: Extracting references and metadata from ATel No. 16116
-Assume you want to scrap the latest ATel (let's say ATel No. 16116) from the website. In order to extract its metadata, run the following command: `python atel_scraper.py --atel_id 16116`. Then, the script will return a dictionary with the following entries:
+Assume you want to scrap the latest ATel (let's say ATel No. 16116) from the website. In order to extract its metadata, run the following command: `python atel_scraper.py --report_type atel --report_id 16116`. Then, the script will return a dictionary with the following entries:
 
 ```
 {'atel_id': 16116,
